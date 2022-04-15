@@ -35,6 +35,8 @@ const config = {
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 0,
+
+    browserName: 'chromium',
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://localhost:3000',
 
@@ -43,27 +45,27 @@ const config = {
   },
 
   /* Configure projects for major browsers */
-  projects: [
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-      },
-    },
+ // projects: [
+   // {
+      // name: 'chromium',
+      // use: {
+      //   ...devices['Desktop Chrome'],
+      // },
+    //},
 
-    {
-      name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-      },
-    },
+   // {
+      // name: 'firefox',
+      // use: {
+      //   ...devices['Desktop Firefox'],
+      // },
+   // },
 
-    {
-      name: 'webkit',
-      use: {
-        ...devices['Desktop Safari'],
-      },
-    },
+    //{
+      // name: 'webkit',
+      // use: {
+      //   ...devices['Desktop Safari'],
+      // },
+    //},
 
     /* Test against mobile viewports. */
     // {
@@ -92,7 +94,7 @@ const config = {
     //     channel: 'chrome',
     //   },
     // },
-  ],
+  //],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
   // outputDir: 'test-results/',
