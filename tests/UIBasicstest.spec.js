@@ -5,7 +5,7 @@ const { test, expect } = require('@playwright/test'); // import {test} from '@pl
 // test annotation is used to describe a test case.coming from @playwright/test
 // browser is a global variable that is available in all test cases.
 //Line 10 and 12 are the same concept with line 8 ({browser,page} unless we do not want to inject any cookie from the previous tab
-test.only('Page First Playwright test', async ({ browser, page }) =>
+test('Page First Playwright test', async ({ browser, page }) =>
 // Since javascript asyncronus we have to write await command to exucute the code in order 
 {
     //Creates a new browser instance context. It won't share cookies/cache with other browser contexts.
@@ -13,22 +13,22 @@ test.only('Page First Playwright test', async ({ browser, page }) =>
     // Creates a new page in the browser context.
     //const page = await context.newPage();  
     // Navigates to the given url.
-    const userName = page. locator('#username');
-    const password = page. locator("[type='password']");
+    const userName = page.locator('#username');
+    const password = page.locator("[type='password']");
     const signIn = page.locator("#signInBtn");
     const cardTitles = page.locator(".card-body a");
 
     await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
     await userName.type('rahulshettyacademy');
     await password.type("learning");
-    
-    //This method line:29 will wait all the elements loaded before clicking on the button
+
+    //This method line:29 will wait all the elements loaded for product page after clicking on the button
     //we are not allowing to step further until this 2 steps are done we are wrapping them in array
     await Promise.all(
-    [    
-        page.waitForNavigation(),
-        signIn.click(),
-    ]
+        [
+            page.waitForNavigation(),
+            signIn.click(),
+        ]
     );
     //This element is not visible on the page everytime so playwright will wait it 
     //until it is visible without writing wait command bsed on the configuration we have set.
@@ -41,12 +41,12 @@ test.only('Page First Playwright test', async ({ browser, page }) =>
     // await signIn.click();
     //This will return first element text
     //console.log(await page.locator(".card-body a").nth(0).textContent());
-    console.log(await cardTitles.first().textContent());
+    //console.log(await cardTitles.first().textContent());
     //This will grab all the titles on this element list  and print them out as an array
     // we have to use this method after line 35 or 36 because we have to wait those elements attached to the DOM
     console.log(await cardTitles.allTextContents());
 
-    
+
 
 
 
@@ -54,8 +54,8 @@ test.only('Page First Playwright test', async ({ browser, page }) =>
 });
 
 test('First Playwright test with browser context declaration', async ({ browser }) => {
-    
-    
+
+
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto("https://google.com");
@@ -75,9 +75,45 @@ test('First Playwright test with browser context declaration', async ({ browser 
     If needs to write the locator based on text
     text=''
     */
-    
 
 
+
+});
+
+test.only('UI Controls', async ({page})=>
+{
+  await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+  const userName =page. locator('#username');
+  const signIn =page. locator("#signInBtn");
+  //("select.form-control")=> selector is the tagname comes before class name
+   const dropdown= page.locator("select.form-control") 
+   // pass the value of the element
+  await dropdown.selectOption("consult");
+  //since execution is so fast we put a pause
+  // after exucing this code we will see Playeright Inspector in the browser
+  // since there is two radio button we will click on the second one
+  await page.locator(".radiotextsty").last().click();
+  // this is a web based pop up window 
+  await page.locator("#okayBtn").click();
+  //return true or false 
+  console. log(await page. locator(".radiotextsty"). last().isChecked ());
+  await expect (page.locator(".radiotextsty").last()).toBeChecked ()
+  await page.locator("#terms").click();
+  console.log(await page.locator("#terms").isChecked());
+  await expect(page.locator("#terms")).toBeChecked();
+  await page. locator("#terms").uncheck();
+  expect(await page.locator("#terms").isChecked()).toBeFalsy();
+  
+
+
+  await page.pause();
+   
+                                                               
+
+
+
+
+     
 });
 
 
