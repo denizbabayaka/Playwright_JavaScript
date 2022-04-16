@@ -80,43 +80,91 @@ test('First Playwright test with browser context declaration', async ({ browser 
 
 });
 
-test.only('UI Controls', async ({page})=>
-{
-  await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
-  const userName =page. locator('#username');
-  const signIn =page. locator("#signInBtn");
-  //("select.form-control")=> selector is the tagname comes before class name
-   const dropdown= page.locator("select.form-control") 
-   // pass the value of the element
-  await dropdown.selectOption("consult");
-  //since execution is so fast we put a pause
-  // after exucing this code we will see Playeright Inspector in the browser
-  // since there is two radio button we will click on the second one
-  await page.locator(".radiotextsty").last().click();
-  // this is a web based pop up window 
-  await page.locator("#okayBtn").click();
-  //return true or false 
-  console. log(await page. locator(".radiotextsty"). last().isChecked ());
-  await expect (page.locator(".radiotextsty").last()).toBeChecked ()
-  await page.locator("#terms").click();
-  console.log(await page.locator("#terms").isChecked());
-  await expect(page.locator("#terms")).toBeChecked();
-  await page. locator("#terms").uncheck();
-  expect(await page.locator("#terms").isChecked()).toBeFalsy();
-  
+test('UI Controls', async ({ page }) => {
+    await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+    const userName = page.locator('#username');
+    const signIn = page.locator("#signInBtn");
+    const blink = page.locator('.blinkingText'); //or =>[href*='documents-request']
+    //("select.form-control")=> selector is the tagname comes before class name
+    const dropdown = page.locator("select.form-control")
+    // pass the value of the element
+    await dropdown.selectOption("consult");
+    //since execution is so fast we put a pause
+    // after exucing this code we will see Playeright Inspector in the browser
+    // since there is two radio button we will click on the second one
+    await page.locator(".radiotextsty").last().click();
+    // this is a web based pop up window 
+    await page.locator("#okayBtn").click();
+    //return true or false 
+    console.log(await page.locator(".radiotextsty").last().isChecked());
+    await expect(page.locator(".radiotextsty").last()).toBeChecked()
+    await page.locator("#terms").click();
+    console.log(await page.locator("#terms").isChecked());
+    await expect(page.locator("#terms")).toBeChecked();
+    await page.locator("#terms").uncheck();
+    // since the action isChecked performed iside tha bracket we have to wait inside the bracket
+    expect(await page.locator("#terms").isChecked()).toBeFalsy();
 
-
-  await page.pause();
-   
-                                                               
-
+    //checks the element attribute based on class value 
+    await expect(blink).toHaveAttribute('class', 'blinkingText');
 
 
 
-     
+    await page.pause();
+
+
+
+
+
+
+
 });
 
+test.only(' Child windows hadl', async ({browser})=> {
+  const context =await browser.newContext(); 
+  const page= await context.newPage(); 
+  const userName= page. locator('#username');
+  const password = page.locator("[type='password']");
+  const signIn = page.locator("#signInBtn");
 
+   await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+   const documentLink = page. locator("[href*='documents-request']");
+
+    //we put promise because after clicking the link new window will open and we have to create a new
+    // browser context to handle that new window and then we can use that context to navigate 
+    //to the new page those two methods wait each others work to be done to proceed to the next step
+    // and we aasign new page to a variable newPage for the other tab 
+    //and focus of this newPage browser instance  will be new opened window
+    // we put the newPage to array maybe new page would be open more than one 
+    const [newPage]=await Promise.all(
+    [    
+        context.waitForEvent('page'),
+        documentLink.click(),
+    ])
+    // beatuy of playwright is we can handle multiple tabs with new browser instance s
+     text = await newPage.locator(".red").textContent(); 
+     console.log(text);
+     const arrayText=text.split("@") //it will split the text from the  @
+     // it will bring right side of that split text
+     // and again split it from the wide space and bring first element of the array
+     const domain=arrayText[1].split(" ")[0]
+     console.log(domain);
+     const username =domain.split(".")[0]
+     //Now tricky part is we capture the domain and using first page  (line 125) browser instance
+     //we will paste this domain to the username field which is first window 
+     // scope of fist page instance is only first  window
+     await page.locator("#username").type(username);
+     await page.locator("#password").type("learning");
+     await page.locator("#signInBtn").click();
+     await newPage.pause();
+    
+
+
+   
+   
+
+
+});
 
 // npx playwright test --headed
 //npx playwright show-report
