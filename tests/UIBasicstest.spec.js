@@ -13,15 +13,37 @@ test.only('Page First Playwright test', async ({ browser, page }) =>
     // Creates a new page in the browser context.
     //const page = await context.newPage();  
     // Navigates to the given url.
+    const userName = page. locator('#username');
+    const password = page. locator("[type='password']");
+    const signIn = page.locator("#signInBtn");
+
     await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
-    await page.locator('#username').type('deniz');
-    await page.locator("[type='password']").type("12345");
-    await page.locator("#signInBtn").click();
+    await userName.type('rahulshettyacademy');
+    await password.type("learning");
+    await signIn.click()
+    //This element is not visible on the page everytime so playwright will wait it 
+    //until it is visible without writing wait command bsed on the configuration we have set.
+    //timeout: 30 * 1000, comin from playwright.config.js
+    // console.log(await page.locator("[style*='block']").textContent());
+    // await expect(page.locator("[style*='block']")).toContainText('Incorrect');
+    // //type-fill
+    // await userName.fill("");
+    // await userName.fill("deniz");
+    // await signIn.click();
+    //This will return first element text
+    //console.log(await page.locator(".card-body a").nth(0).textContent());
+    console.log(await page.locator(".card-body a").first().textContent());
+
+    
+
+
+
 
 });
 
 test('First Playwright test with browser context declaration', async ({ browser }) => {
-
+    
+    
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto("https://google.com");
