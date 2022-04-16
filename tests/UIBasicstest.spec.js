@@ -4,7 +4,7 @@ const { test, expect } = require('@playwright/test'); // import {test} from '@pl
 
 // test annotation is used to describe a test case.coming from @playwright/test
 // browser is a global variable that is available in all test cases.
-//Line 10 and 12 are the same concept with line 6 ({browser,page} unless we do not want to inject any cookie from the previous tab
+//Line 10 and 12 are the same concept with line 8 ({browser,page} unless we do not want to inject any cookie from the previous tab
 test.only('Page First Playwright test', async ({ browser, page }) =>
 // Since javascript asyncronus we have to write await command to exucute the code in order 
 {
@@ -16,11 +16,20 @@ test.only('Page First Playwright test', async ({ browser, page }) =>
     const userName = page. locator('#username');
     const password = page. locator("[type='password']");
     const signIn = page.locator("#signInBtn");
+    const cardTitles = page.locator(".card-body a");
 
     await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
     await userName.type('rahulshettyacademy');
     await password.type("learning");
-    await signIn.click()
+    
+    //This method line:29 will wait all the elements loaded before clicking on the button
+    //we are not allowing to step further until this 2 steps are done we are wrapping them in array
+    await Promise.all(
+    [    
+        page.waitForNavigation(),
+        signIn.click(),
+    ]
+    );
     //This element is not visible on the page everytime so playwright will wait it 
     //until it is visible without writing wait command bsed on the configuration we have set.
     //timeout: 30 * 1000, comin from playwright.config.js
@@ -32,7 +41,10 @@ test.only('Page First Playwright test', async ({ browser, page }) =>
     // await signIn.click();
     //This will return first element text
     //console.log(await page.locator(".card-body a").nth(0).textContent());
-    console.log(await page.locator(".card-body a").first().textContent());
+    console.log(await cardTitles.first().textContent());
+    //This will grab all the titles on this element list  and print them out as an array
+    // we have to use this method after line 35 or 36 because we have to wait those elements attached to the DOM
+    console.log(await cardTitles.allTextContents());
 
     
 
@@ -67,6 +79,8 @@ test('First Playwright test with browser context declaration', async ({ browser 
 
 
 });
+
+
 
 // npx playwright test --headed
 //npx playwright show-report
