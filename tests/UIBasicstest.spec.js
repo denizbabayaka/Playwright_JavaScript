@@ -120,7 +120,7 @@ test('UI Controls', async ({ page }) => {
 
 });
 
-test.only(' Child windows hadl', async ({browser})=> {
+test(' Child windows hadl', async ({browser})=> {
   const context =await browser.newContext(); 
   const page= await context.newPage(); 
   const userName= page. locator('#username');
@@ -153,9 +153,10 @@ test.only(' Child windows hadl', async ({browser})=> {
      //Now tricky part is we capture the domain and using first page  (line 125) browser instance
      //we will paste this domain to the username field which is first window 
      // scope of fist page instance is only first  window
-     await page.locator("#username").type(username);
+     await page1.locator("#username").type(username);
      await page.locator("#password").type("learning");
      await page.locator("#signInBtn").click();
+    
      await newPage.pause();
     
 
@@ -168,3 +169,6 @@ test.only(' Child windows hadl', async ({browser})=> {
 
 // npx playwright test --headed
 //npx playwright show-report
+//npx playwright test tests/UIBasicstest.spec.js --debug => test will start in debug mode 
+// npx playwright codegen http://google.com => this will generate the code for the page
+//https://trace.playwright.dev/ => open trace zip file 
