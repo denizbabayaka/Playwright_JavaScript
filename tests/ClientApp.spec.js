@@ -14,7 +14,7 @@ test.only('Page First Playwright test', async ({ browser, page }) => {
     await page.locator("[value='Login']").click();
     //Since html works on API calls this code will wait all elements  until all the get calls are done
     //and page fully loaded and DOM is ready basically this code mekes an API call and waits for the response
-    // if we use that code we do not need to use line 20 
+    // if we use that code we do not need to use line 21 
     //Those method works for service based web application which allow API call to the other 
     //third parties
     await page.waitForLoadState("networkidle");
