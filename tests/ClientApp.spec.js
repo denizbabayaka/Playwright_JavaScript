@@ -91,7 +91,7 @@ test.only('Page First Playwright test', async ({ browser, page }) => {
             break;
         }
     }
-    //This will wait till all the elements stable in the page
+    //This method  will wait till all the elements stable in the page
     await page.waitForLoadState("networkidle");
     // This locator will grab the id of the order
     const orderIdDetails = await page.locator(".col-text").textContent();
