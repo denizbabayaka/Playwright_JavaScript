@@ -4,7 +4,7 @@ const { test, expect } = require('@playwright/test'); // import {test} from '@pl
 
 // test annotation is used to describe a test case.coming from @playwright/test
 // browser is a global variable that is available in all test cases.
-//Line 10 and 12 are the same concept with line 8 ({browser,page} unless we do not want to inject any cookie from the previous tab
+//Line 12 and 14 are the same concept with line 8 ({browser,page} unless we do not want to inject any cookie from the previous tab
 test('Page First Playwright test', async ({ browser, page }) =>
 // Since javascript asyncronus we have to write await command to exucute the code in order 
 {
@@ -12,12 +12,12 @@ test('Page First Playwright test', async ({ browser, page }) =>
     //const context = await browser.newContext();
     // Creates a new page in the browser context.
     //const page = await context.newPage();  
-    // Navigates to the given url.
+    
     const userName = page.locator('#username');
     const password = page.locator("[type='password']");
     const signIn = page.locator("#signInBtn");
     const cardTitles = page.locator(".card-body a");
-
+    // Navigates to the given url.
     await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
     await userName.type('rahulshettyacademy');
     await password.type("learning");
