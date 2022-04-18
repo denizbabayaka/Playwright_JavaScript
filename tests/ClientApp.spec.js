@@ -7,8 +7,9 @@ test.only('Page First Playwright test', async ({ browser, page }) => {
 
     await page.goto("https://rahulshettyacademy.com/client")
     const productName = 'Zara Coat 4';
+    const email = "anshika@gmail.com";
     const products = page.locator(".card-body");
-    await page.locator("#userEmail").fill("anshika@gmail.com");
+    await page.locator("#userEmail").fill(email);
     await page.locator("#userPassword").type("Iamking@000");
     await page.locator("[value='Login']").click();
     //Since html works on API calls this code will wait all elements  until all the get calls are done
@@ -30,18 +31,18 @@ test.only('Page First Playwright test', async ({ browser, page }) => {
             await products.nth(i).locator("text= Add To Cart").click();
             break;
         }
-        
+
     }
-    await page. locator("[routerlink*='cart']").click();
+    await page.locator("[routerlink*='cart']").click();
     //This locator will wait until the first element is visible on the page
-    await page. locator("div li").first().waitFor();
+    await page.locator("div li").first().waitFor();
 
     //since there could be more than one "Zara Coat 4" text in other div tags
     //we are giving the specific tag of that method to get the text
     //Those locating methods belong to Playwright API
-    const bool=await page.locator("h3:has-text('Zara Coat 4')").isVisible();
+    const bool = await page.locator("h3:has-text('Zara Coat 4')").isVisible();
     expect(bool).toBeTruthy();
-    
+
     //Those are 2 ways to get the text locator of the checkout button
     //await page.locator("button:has-text('Checkout')").click();
     await page.locator('button[type="button"]').nth(1).click();
@@ -49,26 +50,56 @@ test.only('Page First Playwright test', async ({ browser, page }) => {
     //text box otherwise page can not catch the playwright 
     await page.locator('[placeholder="Select Country"]').type("ind", { delay: 100 });
     // we will get all the results from dropdown
-    const dropdown =  page.locator('.ta-results')
+    const dropdown = page.locator('.ta-results')
     // wait for the dropdown to be visible
     await dropdown.waitFor();
     // get the count index of the dropdown options 
     const optionsCount = await dropdown.locator("button").count();
     //loop through the options
-    for(let i =0;i< optionsCount; ++i)
-   {
-       // get the text of the options based on index
-     text = await dropdown. locator("button").nth(i).textContent();
-     //Inside DOM this element text has got a space be aware of that
-    if(text ===" India")
-    {
-        await dropdown.locator("button").nth(i).click();
-        break;
+    for (let i = 0; i < optionsCount; ++i) {
+        // get the text of the options based on index
+        text = await dropdown.locator("button").nth(i).textContent();
+        //Inside DOM this element text has got a space be aware of that
+        if (text === " India") {
+            await dropdown.locator("button").nth(i).click();
+            break;
+        }
     }
-   }
 
 
-     await page.pause();
+
+    //.user_name [type='text'] => chaining css locator
+    await expect(page.locator("label[type='text']")).toHaveText(email);
+    await page.locator('.action__submit').click();
+
+    await expect(page.locator(".hero-primary")).toHaveText(" Thankyou for the order. ");
+    const orderId = await page.locator(".em-spacer-1 .ng-star-inserted").textContent();
+    console.log(orderId);
+
+    await page.locator('text="ORDERS"').click();
+    await page.locator("tbody").waitFor();
+
+    // it will grab the rows of the body of the table
+    const rows = await page.locator("tbody tr")
+    // loop through the rows
+    for (let i = 0; i < await rows.count(); ++i) {
+        // get the textContent of the inside the row
+        const roworderId = await rows.nth(i).locator("th").textContent();
+        // we are using include method to check if the order id is present in the row
+        if (orderId.includes(roworderId)) {
+            await rows.nth(i).locator("button").first().click();
+            break;
+        }
+    }
+    //This will wait till all the elements stable in the page
+    await page.waitForLoadState("networkidle");
+    // This locator will grab the id of the order
+    const orderIdDetails = await page.locator(".col-text").textContent();
+    //This will check from the new page  if the orderIdDetails includes the orderId 
+    expect(orderId.includes(orderIdDetails)).toBeTruthy();
+
+
+    await page.pause();
 
 
 
