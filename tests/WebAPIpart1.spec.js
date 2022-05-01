@@ -1,17 +1,41 @@
-const { test, expect } = require('@playwright/test'); // import {test} from '@playwright/test';
+const { test, expect,request } = require('@playwright/test'); // import {test} from '@playwright/test';
+
+
+//This is a javaScript object so no need to put double qoute to the key 
+const loginPayLoad = {userEmail:"anshika@gmail.com",userPassword:"Iamking@000"}
+
+test.beforeAll(async () => {
+    
+    // we are using this method to open a request context inside api and assign it to a variable
+    const apiContext = await request.newContext();
+    // making a post call to this end point and assign the response to a variable loginResponse
+   const loginResponse= await apiContext.post('https://rahulshettyacademy.com/api/ecom/auth/login', 
+    {
+        data:loginPayLoad // we are passing the loginPayLoad object to the post method
+    });
+    //checking the status code of the response from response object
+    expect(loginResponse.ok()).toBeTruthy();
+    //grab the response body and assign it to a variable
+    const loginResponseJson=loginResponse.json();
+    //grab the token from the response body and assign it to a variable
+    const token=loginResponseJson.token;
+    
+});
+
+test.beforeEach( () => {
+
+});
 
 
 
 
-test.only('Page First Playwright test', async ({ browser, page }) => {
+test('Client App login', async ({ browser, page }) => {
 
-    await page.goto("https://rahulshettyacademy.com/client")
+    
     const productName = 'Soil';
     const email = "anshika@gmail.com";
     const products = page.locator(".card-body");
-    await page.locator("#userEmail").fill(email);
-    await page.locator("#userPassword").type("Iamking@000");
-    await page.locator("[value='Login']").click();
+    
     //Since html works on API calls this code will wait all elements  until all the get calls are done
     //and page fully loaded and DOM is ready basically this code mekes an API call and waits for the response
     // if we use that code we do not need to use line 21 
