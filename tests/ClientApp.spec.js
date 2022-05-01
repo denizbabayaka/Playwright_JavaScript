@@ -6,7 +6,7 @@ const { test, expect } = require('@playwright/test'); // import {test} from '@pl
 test.only('Page First Playwright test', async ({ browser, page }) => {
 
     await page.goto("https://rahulshettyacademy.com/client")
-    const productName = 'Zara Coat 4';
+    const productName = 'Soil';
     const email = "anshika@gmail.com";
     const products = page.locator(".card-body");
     await page.locator("#userEmail").fill(email);
@@ -33,14 +33,18 @@ test.only('Page First Playwright test', async ({ browser, page }) => {
         }
 
     }
+    
+    
+
     await page.locator("[routerlink*='cart']").click();
-    //This locator will wait until the first element is visible on the page
+    
+    //This locator will wait until the first element is visible on the page for loading
     await page.locator("div li").first().waitFor();
 
     //since there could be more than one "Zara Coat 4" text in other div tags
     //we are giving the specific tag of that method to get the text
     //Those locating methods belong to Playwright API
-    const bool = await page.locator("h3:has-text('Zara Coat 4')").isVisible();
+    const bool = await page.locator("h3:has-text('Soil')").isVisible();
     expect(bool).toBeTruthy();
 
     //Those are 2 ways to get the text locator of the checkout button
@@ -65,7 +69,7 @@ test.only('Page First Playwright test', async ({ browser, page }) => {
             break;
         }
     }
-
+   
 
 
     //.user_name [type='text'] => chaining css locator
