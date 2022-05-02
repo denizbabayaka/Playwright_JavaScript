@@ -2,7 +2,7 @@ const { test, expect, request } = require('@playwright/test'); // import {test} 
 //in this test we are using the request package to make a request to the server
 // and we are using the response json package to check the response elements 
 // later we are using the token to login to the website without using the username and password from UI
-//whatever information we send  from the UI we can send it fro-m the API 
+//whatever information we send  from the UI we can send it from the API 
 
 //This is a javaScript object so no need to put double qoute to the key 
 const loginPayLoad = { userEmail: "anshika@gmail.com", userPassword: "Iamking@000" }
@@ -42,7 +42,7 @@ test.beforeAll(async () => {
     })
     const orderResponseJson = await orderResponse.json();
     console.log(orderResponseJson);
-    orderId =  orderResponseJson.orders[0];
+    orderId = orderResponseJson.orders[0];
 
 
 });
@@ -58,7 +58,12 @@ test.beforeEach(() => {
 
 
 test('Place the order', async ({ browser, page }) => {
+    //creating an object of APIUtils class and passing apiContext var which is the request context
+    //const apiUtils = new APIUtils(request.newContext()); 
 
+     const apiUtils = new APIUtils(apiContext,loginPayLoad);
+     
+     const orderID =createOrder(orderPayLoad);
     //This method wiil insert the script into the local storage of the browser
     //This is a method of javascript it will store 'token' as a key and token var as a value'
     //inspect=>Application=>localStorage=>'token':token( this is the  place we are inserting token)
@@ -103,4 +108,4 @@ test('Place the order', async ({ browser, page }) => {
 
 
 
-    
+
